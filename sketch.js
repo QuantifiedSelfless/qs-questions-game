@@ -41,7 +41,7 @@ function draw() {
 
   if(start == 1){
     //the image will follow the image's movement, so we can use collision from p5sprite on the DOM
-    img.position((width/2)-(img_width/2), s.position.y-(img_height/2));
+    img.position(s.position.x-(img_width/2), s.position.y-(img_height/2));
     zz = img.position();
     //floored since sprites can have non integer positions, while DOM image objects can't
     y_velocity += Math.floor(acceleration);
@@ -73,7 +73,7 @@ function spawn(){
     img.class("noselect")
     s = createSprite(width/2, 10, img_width, img_height);
     s.shapeColor = color(0, 0, 0, 0);
-    img.position((width/2)-(img_width/2), 10-(img_height/2));
+    img.position(s.positon.x-(img_width/2), 10-(img_height/2));
 }
 
 function mousePressed() {
