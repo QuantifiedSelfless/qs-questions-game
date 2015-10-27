@@ -18,37 +18,35 @@ var image_width = 0;
 var image_height = 0;
 var image2_width = 0;
 var image2_height = 0;
+var line_height = 400;
 var img;
 var img2;
-var start = 0;
+var start = false;
+var stopped = false;
 var urls = ["https://pbs.twimg.com/profile_images/429055564262277120/fjuVYyFu.jpeg","https://pbs.twimg.com/profile_images/551143684671291392/Nx_lx21L_400x400.jpeg","http://chan.catiewayne.com/b/src/137230208038.jpg"];
 
 function setup() {
+  background(255,255,255);
   var canv = createCanvas(windowWidth,windowHeight);
   canv.parent("bgCanvas");
   s = createSprite(0,0,0,0);
   s2 = createSprite(0,0,0,0);
-  line = createSprite(width/2,300,width,2);
+  line = createSprite(width/2,line_height,width,2);
   line.immovable = true;
   img = createImg("blank.png");
   img2 = createImg("blank.png");
+  fill(0);
 }
 
 function draw() {
-  background(255,255,255);
+
   img_width = img.width;
   img_height = img.height;
-  fill('rgb(0,255,0)');
-  rect((width/2)+110, 350, 60, 60);
-  fill('rgb(255,0,0)');
-  rect((width/2)-170, 350, 60, 60);  
-  fill(0);
 
-  if(start == 1){
+  if(start){
     //the image will follow the image's movement, so we can use collision from p5sprite on the DOM
     img.position(s.position.x-(img_width/2), s.position.y-(img_height/2));
     img2.position(s2.position.x-(img_width/2), s2.position.y-(img_height/2));
-    zz = img.position();
     //floored since sprites can have non integer positions, while DOM image objects can't
     y_velocity += Math.floor(acceleration);
     s.position.y = s.position.y + y_velocity;
@@ -62,8 +60,15 @@ function draw() {
 
 function invert(){
     y_velocity = Math.floor(y_velocity * -0.5);
-    s.position.y = 171;
-    s2.position.y = 171;
+    s.position.y = line_height-129;
+    s2.position.y = line_height-129;
+    if(y_velocity == -1 && stopped == false){
+        stopped = true;
+        textSize(32);
+        textAlign(CENTER);
+        fill(0, 0, 0);
+        text("This or that?", (width/2), 450);
+    }
 }
 
 function checkDimensions(){
@@ -84,11 +89,15 @@ function spawn(){
     s2 = createSprite(2*(width/3), 10, img_width, img_height);
     s.shapeColor = color(0, 0, 0, 0);
     s2.shapeColor = color(0, 0, 0, 0);
-    img.position(s.positon.x-(img_width/2), 10-(img_height/2));
+    img.position(s.position.x-(img_width/2), 10-(img_height/2));
+    img2.position(s.position.x-(img_width/2), 10-(img_height/2));
+
 }
 
 function mousePressed() {
-    start = 1;
+    background(255,255,255);
+    stopped = false;
+    start = true;
     y_velocity = 0;
     acceleration = 1;
     img.remove();
