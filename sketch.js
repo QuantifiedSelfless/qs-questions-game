@@ -1,11 +1,12 @@
 //TODO
+//Fix sprites falling through
 //Python code to rate set similarity based on Jaccard Index
 //Create interface for comparisons, spawn new image on answer instead of on click
-//Drop 2 images, display text
 //Figure out level loading/AJAX call
 //Arduino testing
 //Figure out how to get image URLS/other user data from database
 //Make it pretty
+
 
 /* --Notes-- /*
 Sprites are positioned from their center, while DOM images are positioned from their top left corner.
@@ -24,7 +25,7 @@ var img;
 var img2;
 var start = false;
 var stopped = false;
-var urls = ["http://petcaretips.net/turtle_waving.gif", "https://pbs.twimg.com/profile_images/429055564262277120/fjuVYyFu.jpeg","https://pbs.twimg.com/profile_images/551143684671291392/Nx_lx21L_400x400.jpeg","http://chan.catiewayne.com/b/src/137230208038.jpg"];
+var urls = ["http://petcaretips.net/turtle_waving.gif", "https://pbs.twimg.com/profile_images/429055564262277120/fjuVYyFu.jpeg","https://piggybackr.s3.amazonaws.com/assets/badges/dinosaur-512x512-7c50535fa644adf34790d54d96663912.png","http://chan.catiewayne.com/b/src/137230208038.jpg"];
 
 function setup() {
   background(255,255,255);
