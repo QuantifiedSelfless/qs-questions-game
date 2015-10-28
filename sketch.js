@@ -1,5 +1,5 @@
 //TODO
-//Fix sprites falling through
+//Fix sprites falling through - 
 //Python code to rate set similarity based on Jaccard Index
 //Create interface for comparisons, spawn new image on answer instead of on click
 //Figure out level loading/AJAX call
@@ -16,23 +16,24 @@ To deal with this, we subtract half the image width/height from the values of th
 var y_velocity = 0;
 var y2_velocity = 0;
 var acceleration = 10;
-var img_width = 0;
-var img_height = 0;
-var img2_width = 0;
-var img2_height = 0;
+var img_width = 256;
+var img_height = 256;
+var img2_width = 256;
+var img2_height = 256;
 var line_height = 400;
 var img;
 var img2;
 var start = false;
 var stopped = false;
-var urls = ["http://petcaretips.net/turtle_waving.gif", "https://pbs.twimg.com/profile_images/429055564262277120/fjuVYyFu.jpeg","https://piggybackr.s3.amazonaws.com/assets/badges/dinosaur-512x512-7c50535fa644adf34790d54d96663912.png","http://chan.catiewayne.com/b/src/137230208038.jpg"];
-
+var urls = ["/eating-grass.jpg"];
 function setup() {
-  background(255,255,255);
+  background(255,255,255,0);
   var canv = createCanvas(windowWidth,windowHeight);
   canv.parent("bgCanvas");
   s = createSprite(0,0,0,0);
   s2 = createSprite(0,0,0,0);
+  s.mouseActive = true;
+  s2.mouseActive = true;
   line = createSprite(width/2,line_height,width,2);
   line.immovable = true;
   img = createImg("blank.png");
@@ -54,6 +55,11 @@ function draw() {
     //check collision with line
     s.bounce(line, invert);
     s2.bounce(line, invert2);
+    console.log(stopped);
+    console.log(s.mouseIsPressed);
+    if(stopped && s.mouseIsPressed){
+        newImages();
+    }
   }
   drawSprites();
 }
@@ -92,6 +98,8 @@ function spawn(){
     img.class("noselect");
     s = createSprite(width/3, 10, img_width, img_height);
     s2 = createSprite(2*(width/3), 10, img2_width, img2_height);
+    s.mouseActive = true;
+    s2.mouseActive = true;
     s.shapeColor = color(0, 0, 0, 0);
     s2.shapeColor = color(0, 0, 0, 0);
     img.position(s.position.x-(img_width/2), 10-(img_height/2));
@@ -99,10 +107,16 @@ function spawn(){
 
 }
 
-function mousePressed() {
-    background(255,255,255);
+function mousePressed(){
+    if(start == false){
+        start = true;
+        newImages();
+    }
+}
+
+function newImages() {
+    background(255,255,255,0);
     stopped = false;
-    start = true;
     y2_velocity = 0;
     y_velocity = 0;
     acceleration = 1;
