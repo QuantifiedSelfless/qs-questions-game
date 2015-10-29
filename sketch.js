@@ -14,16 +14,17 @@ To deal with this, we subtract half the image width/height from the values of th
 var y_velocity = 0;
 var y2_velocity = 0;
 var acceleration = 10;
-var img_width = 256;
-var img_height = 256;
-var img2_width = 256;
-var img2_height = 256;
+var img_width = 0;
+var img_height = 0;
+var img2_width = 0;
+var img2_height = 0;
 var line_height = 400;
 var img;
 var img2;
 var start = false;
 var stopped = false;
-var urls = ["/eating-grass.jpg", "http://www.myfunnyreaction.com/media/k2/items/src/f53115cacd70cd7c73e329ab0a729712.jpg"];
+var dimension_check = [];
+var urls = ["/eating-grass.jpg", "http://www.myfunnyreaction.com/media/k2/items/src/f53115cacd70cd7c73e329ab0a729712.jpg","http://petcaretips.net/turtle_waving.gif","http://wristbandbros.s3.amazonaws.com/assets/blog/0431.png"];
 function setup() {
   background(255,255,255,0);
   var canv = createCanvas(windowWidth,windowHeight);
@@ -84,25 +85,45 @@ function invert2(){
 
 function spawn(){
     //makes our DOM image object un-highlight-able, so it's indistinguishable from the canvas
+    img.removeClass("hide");
+    img2.removeClass("hide");
     img.class("noselect");
-    ig2.class("noselect")
+    img2.class("noselect");
+    console.log()
     s = createSprite(width/3, 10, img_width, img_height);
     s2 = createSprite(2*(width/3), 10, img2_width, img2_height);
+    console.log('Dimensions!: ' + img_width + ", " + img_height + ", " + img2_width + ", " + img2_height)
     s.mouseActive = true;
     s2.mouseActive = true;
     s.shapeColor = color(0, 0, 0, 0);
     s2.shapeColor = color(0, 0, 0, 0);
     img.position(s.position.x-(img_width/2), 10-(img_height/2));
     img2.position(s.position.x-(img2_width/2), 10-(img2_height/2));
+    start = true;
 
 }
 
 function mousePressed(){
     if(start == false){
-        start = true;
+        console.log("Start!")
         newImages();
     }
 }
+
+function doStuff() {
+    if(img_width == 0 || img_height == 0 || img2_width == 0 || img2_height == 0) {
+        console.log("Dimensions: " + img_width + ", " + img_height + ", " + img2_width + ", " + img2_height);
+        img_width = img.width;
+        img_height = img.height;
+        img2_width = img2.width;
+        img2_height = img2.height;
+        setTimeout(doStuff, 50);//wait 50 millisecnds then recheck
+        return;
+    }
+
+    spawn();
+}
+
 
 function newImages() {
     background(255,255,255,0);
@@ -114,26 +135,15 @@ function newImages() {
     img2.remove();
     s.remove();
     s2.remove();
-    img = createImg(urls[ Math.floor( Math.random() * urls.length ) ]);
-    img2 = createImg(urls[ Math.floor( Math.random() * urls.length ) ]);
-
-    //Make sure img_width and image_height have values before drawing them, so the image collides properly.
-    var promise = new Promise(function (resolve, reject) {
-        img_width = img.width;
-        img_height = img.height;
-        img2_width = img2.width;
-        img2_height = img2.height;
-        if (img_width != 0 && img_height != 0 && img2_width != 0 && img2_height != 0) {
-            resolve("Images have correct dimensions");
-        }
-        else {
-            reject(Error("Images had zero width/height."));
-        }
-     });
-     promise.then(function () {
-         spawn();
-     }, function (err) {
-         console.log("Promise not fulfilled.");
-         newImages();
-     });
+    image1url = urls[Math.floor(Math.random() * urls.length)];
+    image2url = urls[Math.floor(Math.random() * urls.length)];
+    img = createImg(image1url);
+    img2 = createImg(image2url);
+    img.class("hide");
+    img2.class("hide");
+    img_width = 0;
+    img_height = 0;
+    img2_width = 0;
+    img2_height = 0;
+    doStuff(); 
 }
