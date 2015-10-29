@@ -1,7 +1,5 @@
 //TODO
-//Fix sprites falling through - 
 //Python code to rate set similarity based on Jaccard Index
-//Create interface for comparisons, spawn new image on answer instead of on click
 //Figure out level loading/AJAX call
 //Arduino testing
 //Figure out how to get image URLS/other user data from database
@@ -25,7 +23,7 @@ var img;
 var img2;
 var start = false;
 var stopped = false;
-var urls = ["/eating-grass.jpg"];
+var urls = ["/eating-grass.jpg", "http://www.myfunnyreaction.com/media/k2/items/src/f53115cacd70cd7c73e329ab0a729712.jpg"];
 function setup() {
   background(255,255,255,0);
   var canv = createCanvas(windowWidth,windowHeight);
@@ -55,9 +53,11 @@ function draw() {
     //check collision with line
     s.bounce(line, invert);
     s2.bounce(line, invert2);
-    console.log(stopped);
-    console.log(s.mouseIsPressed);
+
     if(stopped && s.mouseIsPressed){
+        newImages();
+    }
+    if(stopped && s2.mouseIsPressed){
         newImages();
     }
   }
@@ -82,20 +82,10 @@ function invert2(){
 
 }
 
-function checkDimensions(){
-    if (img_width != 0 && img_height != 0 && img2_width != 0 && img2_height != 0) {
-        spawn();
-    }
-    else {
-        console.log("Caught");
-        window.setTimeout("checkDimensions();",100);
-    }
-
-}
-
 function spawn(){
     //makes our DOM image object un-highlight-able, so it's indistinguishable from the canvas
     img.class("noselect");
+    ig2.class("noselect")
     s = createSprite(width/3, 10, img_width, img_height);
     s2 = createSprite(2*(width/3), 10, img2_width, img2_height);
     s.mouseActive = true;
@@ -126,10 +116,24 @@ function newImages() {
     s2.remove();
     img = createImg(urls[ Math.floor( Math.random() * urls.length ) ]);
     img2 = createImg(urls[ Math.floor( Math.random() * urls.length ) ]);
-    img_width = img.width;
-    img_height = img.height;
-    img2_width = img2.width;
-    img2_height = img2.height;
+
     //Make sure img_width and image_height have values before drawing them, so the image collides properly.
-    checkDimensions();
+    var promise = new Promise(function (resolve, reject) {
+        img_width = img.width;
+        img_height = img.height;
+        img2_width = img2.width;
+        img2_height = img2.height;
+        if (img_width != 0 && img_height != 0 && img2_width != 0 && img2_height != 0) {
+            resolve("Images have correct dimensions");
+        }
+        else {
+            reject(Error("Images had zero width/height."));
+        }
+     });
+     promise.then(function () {
+         spawn();
+     }, function (err) {
+         console.log("Promise not fulfilled.");
+         newImages();
+     });
 }
