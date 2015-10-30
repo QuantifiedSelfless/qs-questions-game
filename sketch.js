@@ -4,8 +4,6 @@
 //Arduino testing
 //Figure out how to get image URLS/other user data from database
 //Make it pretty
-
-
 /* --Notes-- /*
 Sprites are positioned from their center, while DOM images are positioned from their top left corner.
 To deal with this, we subtract half the image width/height from the values of the sprite to position the DOM image.
@@ -23,10 +21,10 @@ var img;
 var img2;
 var start = false;
 var stopped = false;
-var dimension_check = [];
+var answers = [];
 var urls = ["/eating-grass.jpg", "http://www.myfunnyreaction.com/media/k2/items/src/f53115cacd70cd7c73e329ab0a729712.jpg","http://petcaretips.net/turtle_waving.gif","http://wristbandbros.s3.amazonaws.com/assets/blog/0431.png"];
 function setup() {
-  background(255,255,255,0);
+  background(255,255,255);
   var canv = createCanvas(windowWidth,windowHeight);
   canv.parent("bgCanvas");
   s = createSprite(0,0,0,0);
@@ -57,9 +55,15 @@ function draw() {
 
     if(stopped && s.mouseIsPressed){
         newImages();
+        //array append A
+        answers.push("A");
+        console.log(answers);
     }
     if(stopped && s2.mouseIsPressed){
         newImages();
+        //array append B
+        answers.push("B");
+        console.log(answers);
     }
   }
   drawSprites();
@@ -80,7 +84,6 @@ function invert(){
 function invert2(){
     y2_velocity = Math.floor(y2_velocity * -0.5);
     s2.position.y = line_height-(img2_height/2)+1;
-
 }
 
 function spawn(){
@@ -120,13 +123,12 @@ function doStuff() {
         setTimeout(doStuff, 50);//wait 50 millisecnds then recheck
         return;
     }
-
     spawn();
 }
 
 
 function newImages() {
-    background(255,255,255,0);
+    background(255,255,255);
     stopped = false;
     y2_velocity = 0;
     y_velocity = 0;
