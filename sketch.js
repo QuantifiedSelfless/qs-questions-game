@@ -1,8 +1,11 @@
 //TODO
-//Python code to rate set similarity based on Jaccard Index
-//Figure out level loading/AJAX call
+//Python code to rate set similarity based on Jaccard Index w/ fake data sets
+//Data Spec
+//Data Collecting Version of Game
+
 //Arduino testing
 //Figure out how to get image URLS/other user data from database
+//Figure out level loading/AJAX call
 //Make it pretty
 /* --Notes-- /*
 Sprites are positioned from their center, while DOM images are positioned from their top left corner.
@@ -24,18 +27,18 @@ var stopped = false;
 var answers = [];
 var urls = ["/eating-grass.jpg", "http://www.myfunnyreaction.com/media/k2/items/src/f53115cacd70cd7c73e329ab0a729712.jpg","http://petcaretips.net/turtle_waving.gif","http://wristbandbros.s3.amazonaws.com/assets/blog/0431.png"];
 function setup() {
-  background(255,255,255);
-  var canv = createCanvas(windowWidth,windowHeight);
-  canv.parent("bgCanvas");
-  s = createSprite(0,0,0,0);
-  s2 = createSprite(0,0,0,0);
-  s.mouseActive = true;
-  s2.mouseActive = true;
-  line = createSprite(width/2,line_height,width,2);
-  line.immovable = true;
-  img = createImg("blank.png");
-  img2 = createImg("blank.png");
-  fill(0);
+    background(255,255,255);
+    var canv = createCanvas(windowWidth,windowHeight);
+    canv.parent("bgCanvas");
+    s = createSprite(0,0,0,0);
+    s2 = createSprite(0,0,0,0);
+    s.mouseActive = true;
+    s2.mouseActive = true;
+    line = createSprite(width/2,line_height,width,2);
+    line.immovable = true;
+    img = createImg("blank.png");
+    img2 = createImg("blank.png");
+    fill(0);
 }
 
 function draw() {
@@ -55,13 +58,11 @@ function draw() {
 
     if(stopped && s.mouseIsPressed){
         newImages();
-        //array append A
         answers.push("A");
         console.log(answers);
     }
     if(stopped && s2.mouseIsPressed){
         newImages();
-        //array append B
         answers.push("B");
         console.log(answers);
     }
@@ -103,7 +104,6 @@ function spawn(){
     img.position(s.position.x-(img_width/2), 10-(img_height/2));
     img2.position(s.position.x-(img2_width/2), 10-(img2_height/2));
     start = true;
-
 }
 
 function mousePressed(){
@@ -125,7 +125,6 @@ function doStuff() {
     }
     spawn();
 }
-
 
 function newImages() {
     background(255,255,255);
