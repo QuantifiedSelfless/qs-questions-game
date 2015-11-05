@@ -18,3 +18,10 @@
 .hide {
     display: none;
 }
+
+h2{
+    display: inline-block;
+    padding-bottom: 30px;
+    font-size: 48px;
+    
+}
