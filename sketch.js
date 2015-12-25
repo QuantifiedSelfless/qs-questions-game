@@ -11,11 +11,11 @@
 Sprites are positioned from their center, while DOM images are positioned from their top left corner.
 To deal with this, we subtract half the image width/height from the values of the sprite to position the DOM image.
 */
+var question_text;
 var questions = ["Pizza or Hot Dogs?", "Would you rather eat a scorpion or a nail?", "47 or 62?", "Mice or Rice?"];
 var left = ["Pizza", "Scorpion", "47", "Mice"];
 var right = ["Hot Dogs", "Nail", "62", "Rice"];
 var img_bool = [true, false, false, false];
-
 var y_velocity = 0;
 var y2_velocity = 0;
 var acceleration = 10;
@@ -31,8 +31,16 @@ var stopped = false;
 var answers = [];
 var to_ask_index = 0;
 var urls = ["http://previewcf.turbosquid.com/Preview/2014/08/01__22_25_34/256x256.jpgeda9e67c-b397-47b3-a12b-2fd410090bfbLarge.jpg", "http://www.fancyicons.com/free-icons/220/foods/png/256/hot_dog2_256.png","http://petcaretips.net/turtle_waving.gif","http://wristbandbros.s3.amazonaws.com/assets/blog/0431.png"];
+
 function setup() {
-    background(255,255,255);
+    //background(255,255,255);
+
+    
+
+
+    question_text = createDiv('Start');
+    question_text.class("questionText");
+    var canv2 = createCanvas(windowWidth, windowHeight);
     var canv = createCanvas(windowWidth,windowHeight);
     canv.parent("bgCanvas");
     s = createSprite(0,0,0,0);
@@ -40,10 +48,16 @@ function setup() {
     s.mouseActive = true;
     s2.mouseActive = true;
     line = createSprite(width/2,line_height,width,2);
+    line.shapeColor = color(124,109,88);
     line.immovable = true;
     img = createImg("blank.png");
     img2 = createImg("blank.png");
-    fill(0);
+    noStroke();
+    for(i = 0; i < height; i+= 40){
+        fill(124,109,88,90);
+        rect(0, i, width, 2);
+    }
+    rect(100, 0, 2, height);
 }
 
 function draw() {
@@ -86,11 +100,10 @@ function invert(){
     s.position.y = line_height-(img_height/2)+1;
     if(y_velocity == -1 && stopped == false){
         stopped = true;
-        textSize(32);
-        textAlign(CENTER);
         fill(0, 0, 0);
         if(to_ask.length > 0){
-            text(to_ask[0], (width/2), 450);
+            question_text = createDiv(to_ask);
+            question_text.class("questionText");
         }
         
     }
@@ -125,20 +138,21 @@ function mousePressed(){
     }
 }
 
-function doStuff() {
+function dimensionCheck() {
     if(img_width == 0 || img_height == 0 || img2_width == 0 || img2_height == 0) {
         img_width = img.width;
         img_height = img.height;
         img2_width = img2.width;
         img2_height = img2.height;
-        setTimeout(doStuff, 50);//wait 50 millisecnds then recheck
+        setTimeout(dimensionCheck, 50);//wait 50 millisecnds then recheck
         return;
     }
     spawn();
 }
 
 function newImages() {
-    background(255,255,255);
+    //background(255,255,255);
+    question_text.remove();
     stopped = false;
     y2_velocity = 0;
     y_velocity = 0;
@@ -165,7 +179,6 @@ function newImages() {
 
     }
     else if(img_bool[to_ask_index] == false){
-        
 
         img_bool.splice(to_ask_index,1);
         left_text = left.splice(to_ask_index, 1);
@@ -175,9 +188,8 @@ function newImages() {
 
     }
     else{
-        textSize(32);
-        textAlign(CENTER);
-        text("No more questions!", (width/2), 450);
+        question_text = createDiv("No More Questions!");
+        question_text.class("questionText");
     }
 
     img.class("hide");
@@ -186,5 +198,5 @@ function newImages() {
     img_height = 0;
     img2_width = 0;
     img2_height = 0;
-    doStuff(); 
+    dimensionCheck(); 
 }

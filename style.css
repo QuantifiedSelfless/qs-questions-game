@@ -5,6 +5,22 @@
   z-index: -2;
 }
 
+html{
+  background-image: url("paper_bg2.jpg");
+  background-position: center; 
+
+}
+
+.questionText {
+
+  font-size: 48px;
+  text-align: center;
+  position: relative;
+  top:475px;
+  font-family: "Exo 2";
+  color: #483d39;
+}
+
 .noselect {
     display: inline-block;
     -webkit-touch-callout: none;
@@ -23,5 +39,7 @@ h2{
     display: inline-block;
     padding-bottom: 30px;
     font-size: 48px;
+    color: #483d39;
+    font-family: "Exo 2";
     
 }
