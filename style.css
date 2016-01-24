@@ -11,24 +11,19 @@
   z-index: -2;
 }
 
-html{
-  background-image: url("paper_bg2.jpg");
-  background-position: center; 
-
-}
-
 .questionText {
-
+  margin: auto;
+  width: 75%;
   font-size: 48px;
   text-align: center;
   position: relative;
-  top:480px;
+  top:80px;
   font-family: "bmce";
   color: #483d39;
+
 }
 
 .noselect {
-    display: inline-block;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
