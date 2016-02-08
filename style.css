@@ -1,7 +1,6 @@
 @font-face {
-    font-family: "bmce";
-    src: url("fonts/bmce.ttf");
-    font-weight: bold;
+    font-family: "Exo2";
+    src: url("fonts/Exo2.0-Regular.otf");
 }
 
 #bgCanvas {
@@ -18,8 +17,9 @@
   text-align: center;
   position: relative;
   top:80px;
-  font-family: "bmce";
+  font-family: "Exo 2";
   color: #483d39;
+  cursor: default;
 
 }
 
@@ -38,9 +38,10 @@
 
 h2{
     display: inline-block;
-    padding-bottom:20px;
+    padding-bottom:29px;
     font-size: 48px;
     color: #483d39;
-    font-family: "bmce";
+    font-family: "Exo 2";
+    cursor: default;
     
 }

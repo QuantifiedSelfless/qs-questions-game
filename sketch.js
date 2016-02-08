@@ -2,18 +2,32 @@
 Sprites are positioned from their center, while DOM images are positioned from their top left corner.
 To deal with this, we subtract half the image width/height from the values of the sprite to position the DOM image.
 */
-var timer_draw = '03:00'
-var timer_min = 3;
-var timer_sec = 0;
+
+var timer_draw = '00'
+var timer_min = 0;
+var timer_sec = 5;
 var timer_text;
 var time_start = false;
-var question_num = 0;
+var question_count = 0;
 var question_text;
-var questions = ["Pizza or Hot Dogs?", "Would you rather eat a scorpion or a nail?", "47 or 62?", "Mice or Rice?", "A or B?", "C or D?", "2 or K?", "Yes or No?", "Now or later?", "Uh or Huh?", "Cars or Cats?", "W or U?"];
-var left = ["Pizza", "Scorpion", "47", "Mice", "A", "C", "2", "Yes", "Now", "Uh", "Cars", "W"];
-var right = ["Hot Dogs", "Nail", "62", "Rice", "B", "D", "K", "No", "Later", "Huh", "Cats", "U"];
+var questions = [];
+var left = [];
+var right = [];
+var img_bool = [];
+var q_nums = [];
+for(var i = 0; i < q_json.length; i++){
+
+    questions.push(q_json[i].question_text);
+    left.push(q_json[i].question_left);
+    right.push(q_json[i].question_right);
+    img_bool.push(q_json[i].image);
+    q_nums.push(q_json[i].question_number);
+}
+//var questions = ["Pizza or Hot Dogs?", "Would you rather eat a scorpion or a nail?", "47 or 62?", "Mice or Rice?", "A or B?", "C or D?", "2 or K?", "Yes or No?", "Now or later?", "Uh or Huh?", "Cars or Cats?", "W or U?"];
+//var left = ["Pizza", "Scorpion", "47", "Mice", "A", "C", "2", "Yes", "Now", "Uh", "Cars", "W"];
+//var right = ["Hot Dogs", "Nail", "62", "Rice", "B", "D", "K", "No", "Later", "Huh", "Cats", "U"];
 var mock_answers = ['1A','2B','3A','4B','5A','6A','7B','8A','9B','10B','11A','12B','13B','14A','15B','16B','17A','18B','19A','20A','21A','22B','23A','24A','25A','26B','27B','28A','29B','30B'];
-var img_bool = [true, false, false, false, false, false, false, false, false, false, false, false];
+//var img_bool = [true, false, false, false, false, false, false, false, false, false, false, false];
 var y_velocity = 0;
 var y2_velocity = 0;
 var acceleration = 10;
@@ -35,6 +49,7 @@ var urls = ["http://previewcf.turbosquid.com/Preview/2014/08/01__22_25_34/256x25
 
 function preload(){
     podium = loadImage("podium.png");
+    overlay = loadImage("Tree_Overlay.png")
 }
 
 function setup() {
@@ -70,23 +85,23 @@ function draw() {
     textSize(32);
     fill(0);
     textAlign(CENTER);
+    fill("#483d39");
+    textFont("Exo2");
     text(timer_draw, width/2, 65);
 
   if(start){
-    if(time_start == false){
-        timerinterval = setInterval(update_timer, 1000);
-        time_start = true;
-    }
     if(wrong_prompt){
-        background(255,0,0);
-        text("I'll give you a second to think about what you just said.", width/2, 300);
+        clearInterval(timerinterval);
+        imageMode(CORNER);
+        image(overlay, 0, 0, width, height);
+        text("DesignCraft would like you to take a moment to think about what you just said.", width/2, 300);
 
         if(wrong_once){
             wrong_once = false;
             img.class("hide");
             img2.class("hide");
             question_text.class("hide");
-            setTimeout(function(){wrong_prompt = false; img.removeClass("hide"); img2.removeClass("hide"); question_text.removeClass("hide");}, 3000);
+            setTimeout(function(){wrong_prompt = false; img.removeClass("hide"); img2.removeClass("hide"); question_text.removeClass("hide"); timerinterval = setInterval(update_timer, 1000);}, 5000);
         }
     }
     else{
@@ -110,11 +125,11 @@ function draw() {
     }
 
     if(!end && stopped && s.mouseIsPressed){
-        newQuestion();
-        question_num++;
+        question_count++;
+        question_num = q_nums.splice(to_ask_index,1);
         // Only push to initial array for first 10 questions
         // Then push to secondary array, start comparisons.
-        if(question_num <= 10){
+        if(question_count <= 10){
             answers_ten.push(question_num + "A");
             console.log(answers_ten);
         }
@@ -126,12 +141,13 @@ function draw() {
                 wrong_once = true;
                 wrong_prompt = true;
             }
-        }  
+        }
+        newQuestion();  
     }
     else if(!end && stopped && s2.mouseIsPressed){
-        newQuestion();
-        question_num++;
-        if(question_num <= 10){
+        question_count++;
+        question_num = q_nums.splice(to_ask_index,1);
+        if(question_count <= 10){
             answers_ten.push(question_num + "B");
             console.log(answers_ten);
         }
@@ -144,21 +160,33 @@ function draw() {
                 wrong_prompt = true;
             }
         }
+        newQuestion();
     }
-  }
-  else{
-    /*fill(0);
-    textAlign(CENTER);
-    textSize(32);
-    text("Click to Start", width/2, height/2);*/
   }
   drawSprites();
 }
 
 function update_timer(){
     if(timer_min == 0 && timer_sec == 0){
-        clearInterval(timerinterval);
-        //Time's up, reset!
+    question_num = q_nums.splice(to_ask_index,1);    
+    
+    // Need to decide what to do when time runs out on a question.
+
+    /*late_answer = ["A","B"][Math.floor(Math.random() * 2)];
+        if(question_count <= 10){
+            answers_ten.push(question_num + late_answer);
+            console.log(answers_ten);
+        }
+        else{
+            answers_twenty.push(question_num + late_answer);
+            console.log(answers_twenty);
+            if($.inArray(question_num + late_answer, mock_answers) == -1){
+                console.log("WRONG!");
+                wrong_once = true;
+                wrong_prompt = true;
+            }
+        }
+        newQuestion();*/ 
     }
 
     else if(timer_sec == 0){
@@ -169,7 +197,9 @@ function update_timer(){
     else{
         timer_sec--;
     }
-    timer_draw = ('0' + timer_min).slice(-2) + ':' + ('0' + timer_sec).slice(-2)
+    //timer_draw = ('0' + timer_min).slice(-2) + ':' + ('0' + timer_sec).slice(-2)
+    timer_draw = ('0' + timer_sec).slice(-2)
+
     
 }
 
@@ -183,6 +213,7 @@ function invert(){
         if(to_ask.length > 0){
             question_text = createDiv(to_ask);
             question_text.class("questionText");
+            question_text.class("noselect");            
         }
         
     }
@@ -231,6 +262,10 @@ function dimensionCheck() {
 
 function newQuestion() {
     //background(255,255,255);
+    if(start){
+        clearInterval(timerinterval);
+        timer_sec = 5;
+    }
     question_text.remove();
     stopped = false;
     y2_velocity = 0;
@@ -241,8 +276,7 @@ function newQuestion() {
     s.remove();
     s2.remove();
     //Randomly grab question from list of unasked questions
-    //to_ask_index = Math.floor(Math.random() * questions.length);
-    to_ask_index = questions.length - 1
+    to_ask_index = Math.floor(Math.random() * questions.length);
     //Remove that question from the pool of questions to be asked
     to_ask = questions.splice(to_ask_index, 1);
     //if question needs images, load image. otherwise, load text.
@@ -266,11 +300,15 @@ function newQuestion() {
 
     }
     else{
+
+        // Draw the results screen
+
         question_text = createDiv("No More Questions!");
         question_text.class("questionText");
         question_text.class("noselect");
         clearInterval(timerinterval);
         end = true;
+        // Refresh page here
     }
 
     img.class("hide");
@@ -279,6 +317,6 @@ function newQuestion() {
     img_height = 0;
     img2_width = 0;
     img2_height = 0;
-
+    timerinterval = setInterval(update_timer, 1000);
     dimensionCheck(); 
 }
