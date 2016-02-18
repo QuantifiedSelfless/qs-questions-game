@@ -78,7 +78,6 @@ var img;
 var img2;
 var start = false;
 var end = false;
-var stopped = false;
 var wrong_prompt = false;
 var wrong_count = 0;
 var answers_ten = [];
@@ -165,7 +164,7 @@ var Round1 = function () {
         console.log('asking a question :)')
         timerinterval = setInterval(update_timer, 1000);
         question_text.remove();
-        stopped = false;
+        this.stopped = false;
         y2_velocity = 0;
         y_velocity = 0;
         acceleration = 1;
@@ -193,6 +192,7 @@ var Round1 = function () {
 
     this.update= function () {
         while (this.stopped == false) {
+            console.log(this.stopped);
             this.updateSprite();
             console.log('updating sprites');
         }
@@ -223,11 +223,12 @@ var Round1 = function () {
 
     this.invert= function () {
         console.log('invert so hard');
+        console.log(this.stopped);
         y_velocity = Math.floor(y_velocity * -0.5);
         y2_velocity = Math.floor(y2_velocity * -0.5);
         s2.position.y = line_height-5-(img_height/2);
         s.position.y = line_height-5-(img_height/2);
-        if(y_velocity <= -1 && stopped == false){
+        if(y_velocity <= -1 && this.stopped == false){
             console.log(y_velocity)
             this.stopped = true;
             fill(0, 0, 0);
