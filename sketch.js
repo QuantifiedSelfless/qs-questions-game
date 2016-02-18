@@ -26,8 +26,12 @@ for(var i = 0; i < q_json.length; i++){
 //var questions = ["Pizza or Hot Dogs?", "Would you rather eat a scorpion or a nail?", "47 or 62?", "Mice or Rice?", "A or B?", "C or D?", "2 or K?", "Yes or No?", "Now or later?", "Uh or Huh?", "Cars or Cats?", "W or U?"];
 //var left = ["Pizza", "Scorpion", "47", "Mice", "A", "C", "2", "Yes", "Now", "Uh", "Cars", "W"];
 //var right = ["Hot Dogs", "Nail", "62", "Rice", "B", "D", "K", "No", "Later", "Huh", "Cats", "U"];
-var mock_answers = ['1A','2B','3A','4B','5A','6A','7B','8A','9B','10B','11A','12B','13B','14A','15B','16B','17A','18B','19A','20A','21A','22B','23A','24A','25A','26B','27B','28A','29B','30B'];
+var mock_answers = ['1B','2B','3B','4B','5B','6B','7B','8B','9B','10B','11B','12B','13B','14B','15B','16B','17B','18B','19B','20B','21B','22B','23B','24B','25B','26B','27B','28B','29B','30B'];
 //var img_bool = [true, false, false, false, false, false, false, false, false, false, false, false];
+var percent = 0;
+var results_timer;
+var timerinterval;
+var prog_done = false;
 var y_velocity = 0;
 var y2_velocity = 0;
 var acceleration = 10;
@@ -87,7 +91,7 @@ function draw() {
     textAlign(CENTER);
     fill("#483d39");
     textFont("Exo2");
-    text(timer_draw, width/2, 65);
+    if(!end) text(timer_draw, width/2, 65);
 
   if(start){
     if(wrong_prompt){
@@ -101,7 +105,7 @@ function draw() {
             img.class("hide");
             img2.class("hide");
             question_text.class("hide");
-            setTimeout(function(){wrong_prompt = false; img.removeClass("hide"); img2.removeClass("hide"); question_text.removeClass("hide"); timerinterval = setInterval(update_timer, 1000);}, 5000);
+            setTimeout(function(){wrong_prompt = false; img.removeClass("hide"); img2.removeClass("hide"); question_text.removeClass("hide"); timerinterval = setInterval(update_timer, 1000); if(end) results_timer = setInterval(increase_percentage, 20);}, 5000);
         }
     }
     else{
@@ -162,6 +166,7 @@ function draw() {
         }
         newQuestion();
     }
+    else if(end && !wrong_prompt) results();
   }
   drawSprites();
 }
@@ -170,7 +175,9 @@ function update_timer(){
     if(timer_min == 0 && timer_sec == 0){
     question_num = q_nums.splice(to_ask_index,1);    
     
-    // Need to decide what to do when time runs out on a question.
+    // Need to decide what to do when time runs out on a 
+
+
 
     /*late_answer = ["A","B"][Math.floor(Math.random() * 2)];
         if(question_count <= 10){
@@ -260,6 +267,37 @@ function dimensionCheck() {
     spawn();
 }
 
+function results(){
+    rectMode(CORNER);
+    bar_width = 800;
+    bar_height = 50;
+    bar_x = (width/2) - (bar_width/2);
+    fill(75,66,59);
+    textAlign(CENTER);
+    textSize(40);
+    text("Results", width/2, 100);
+    rect(bar_x, height/2, bar_width, bar_height);
+    fill(139,196,182);
+    rect(bar_x, height/2, ((percent * bar_width)/(100)), bar_height);
+    textSize(32);
+    fill(42,56,47);
+    stroke(139,196,182);
+    strokeWeight(3);
+    text(percent + "%", width/2, height/2+35);
+    if(prog_done){
+        strokeWeight(0);
+        text("I don't think you are who you say you are.", width/2, 300);
+    } 
+}
+
+function increase_percentage(){
+    if(percent < 48) percent++;
+    else{
+        clearInterval(results_timer);
+        prog_done = true;
+    }
+}
+
 function newQuestion() {
     //background(255,255,255);
     if(start){
@@ -302,12 +340,9 @@ function newQuestion() {
     else{
 
         // Draw the results screen
-
-        question_text = createDiv("No More Questions!");
-        question_text.class("questionText");
-        question_text.class("noselect");
         clearInterval(timerinterval);
         end = true;
+        if(!wrong_prompt) results_timer = setInterval(increase_percentage, 20);
         // Refresh page here
     }
 

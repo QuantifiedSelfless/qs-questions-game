@@ -24,7 +24,7 @@ function draw(){
 	fill(42,56,47);
 	stroke(139,196,182);
 	strokeWeight(3);
-	text(percent + "%", width/2, 375);
+	text(percent + "%", width/2, height/2+35);
 	if(prog_done){
 		strokeWeight(0);
 		text("I don't think you are who you say you are.", width/2, 300);
