@@ -15,10 +15,10 @@ var q_json = [
     },
     {
         "question_number":"3",
-        "question_text":"Do you prefer meat, or vegetables?",
-        "question_left":"Meat",
-        "question_right":"Vegetables",
-        "image":false
+        "question_text":"Would you rather view ads that sell your data, but pay nothing for a service, or pay for a service, but receive no ads?",
+        "question_left":"View Ads",
+        "question_right":"Pay",
+        "image":false   
     },
     {
         "question_number":"4",
@@ -214,13 +214,6 @@ var q_json = [
         "question_text":"Money or Privacy",
         "question_left":"Money",
         "question_right":"Privacy",
-        "image":false   
-    },
-    {
-        "question_number":"32",
-        "question_text":"Would you rather view ads that sell your data, but pay nothing for a service, or pay for a service, but receive no ads?",
-        "question_left":"View Ads",
-        "question_right":"Pay",
         "image":false   
     }
 ]; 

@@ -103,10 +103,6 @@ function setup() {
     aspect = podium.width/podium.height;
     pod_width = width * 0.75;
     pod_height = podium.height/(podium.width/(pod_width))
-    line_height = height-pod_height-10 
-    line = createSprite(width/2,line_height,width*0.75,10);
-    line.shapeColor = color(200,175,75);
-    line.immovable = true;
     textFont("Exo2");
 
 }
@@ -164,9 +160,8 @@ var Round1 = function () {
         question_text = this.question['question_text'];
         left_choice = createElement('h2',left_text);
         right_choice = createElement('h2',right_text);
-        console.log("Make sprites?");
-        left_choice.position(100, 200);
-        right_choice.position(300, 200);
+        left_choice.position((width/3) - (left_choice.width/2), 400);
+        right_choice.position((2*width/3) - (right_choice.width/2), 400);
         question_text = createDiv(this.question['question_text']);
         question_text.class("questionText");
         question_text.class("noselect");  
@@ -178,11 +173,13 @@ var Round1 = function () {
         mya = mock_answers[myq];
         answers_ten.push({myq: 'A'});
         if ('A' == mya) {
-            left_choice.attribute('background-color', 'green');
+            left_choice.style('background-color', 'green');
             setTimeout(function () {me.questionTime()}, 1000);
         } else {
+            left_choice.style('background-color', 'red');
             wrong_count++;
-            this.wrongDisplay();
+            setTimeout(function () {me.wrongDisplay()}, 1000);
+            
         }
 
     }
@@ -193,11 +190,12 @@ var Round1 = function () {
         mya = mock_answers[myq];
         answers_ten.push({myq: 'B'});
         if ('B' == mya) {
-            right_choice.attribute('background-color', 'green');
+            right_choice.style('background-color', 'green');
             setTimeout(function () {me.questionTime()}, 1000);
         } else {
+            right_choice.style('background-color', 'red');
             wrong_count++;
-            this.wrongDisplay();
+            setTimeout(function () {me.wrongDisplay()}, 1000);
         }
     }
 
@@ -229,7 +227,7 @@ var Round1 = function () {
         imageMode(CENTER);
         rectMode(CENTER);
         fill(255);
-        rect(width/2, line_height-200, width*0.75, line_height);
+        rect(width/2, height-pod_height-200, width*0.75, pod_height+200);
         image(podium, width/2, height - (pod_height/2), pod_width, pod_height);
         textSize(32);
         fill(0);
