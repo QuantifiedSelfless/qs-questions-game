@@ -17,7 +17,7 @@
   text-align: center;
   position: relative;
   font-family: "Exo 2";
-  top: 80;
+  top: 70;
   color: #483d39;
   cursor: default;
 
@@ -38,10 +38,18 @@
 
 h2{
     display: inline-block;
-    padding-bottom:29px;
     font-size: 48px;
     color: #483d39;
     font-family: "Exo 2";
     cursor: default;
     
+}
+
+p{
+  font-family: "Exo 2";
+  color: #483d39;
+  font-size: 48px;
+  top: 70;
+  position: relative;
+  text-align: center;
 }

@@ -65,7 +65,6 @@ var y2_velocity = 0;
 var acceleration = 10;
 var left_choice;
 var right_choice;
-var stopped = false;
 var start = false;
 var end = false;
 var wrong_prompt = false;
@@ -127,6 +126,7 @@ var Round1 = function () {
     }
 
     this.start= function () {
+        console.log("Creating questions, drawing canvas, spawning inital question.");
         this.createQuestions();
         this.drawCanvas();
         this.questionTime();
@@ -146,10 +146,6 @@ var Round1 = function () {
         //console.log('asking a question :)')
         timerinterval = setInterval(update_timer, 1000);
         question_text.remove();
-        stopped = false;
-        y2_velocity = 0;
-        y_velocity = 0;
-        acceleration = 1;
         left_choice.remove();
         right_choice.remove();
         this.question = this.QR1[this.q_num];
@@ -160,42 +156,53 @@ var Round1 = function () {
         question_text = this.question['question_text'];
         left_choice = createElement('h2',left_text);
         right_choice = createElement('h2',right_text);
-        left_choice.position((width/3) - (left_choice.width/2), 400);
-        right_choice.position((2*width/3) - (right_choice.width/2), 400);
+        left_choice.position((width/3) - (left_choice.width/2), pod_height+100);
+        right_choice.position((2*width/3) - (right_choice.width/2), pod_height+100);
         question_text = createDiv(this.question['question_text']);
         question_text.class("questionText");
         question_text.class("noselect");  
     }
 
-    this.leftFire= function () {
+    this.leftFire= function ( round ) {
         me = this;
         myq = parseInt(this.question["question_number"]);
         mya = mock_answers[myq];
-        answers_ten.push({myq: 'A'});
-        if ('A' == mya) {
-            left_choice.style('background-color', 'green');
-            setTimeout(function () {me.questionTime()}, 1000);
-        } else {
-            left_choice.style('background-color', 'red');
-            wrong_count++;
-            setTimeout(function () {me.wrongDisplay()}, 1000);
-            
+        if(round == 1){
+            answers_ten.push({myq: 'A'});
         }
+        else{
+            answers_twenty.push({myq: 'A'});
+            if ('A' == mya) {
+                left_choice.style('background-color', 'green');
+                setTimeout(function () {me.questionTime()}, 200);
+            } else {
+                left_choice.style('background-color', 'red');
+                wrong_count++;
+                setTimeout(function () {me.wrongDisplay()}, 200);
+                   
+            }
+        }
+
 
     }
 
-    this.rightFire = function () {
+    this.rightFire = function ( round ) {
         me = this;
         myq = parseInt(this.question["question_number"]);
         mya = mock_answers[myq];
-        answers_ten.push({myq: 'B'});
-        if ('B' == mya) {
-            right_choice.style('background-color', 'green');
-            setTimeout(function () {me.questionTime()}, 1000);
-        } else {
-            right_choice.style('background-color', 'red');
-            wrong_count++;
-            setTimeout(function () {me.wrongDisplay()}, 1000);
+        if(round == 1){
+            answers_ten.push({myq: 'B'});
+        }
+        else{
+            answers_twenty.push({myq: 'B'});
+            if ('B' == mya) {
+                right_choice.style('background-color', 'green');
+                setTimeout(function () {me.questionTime()}, 200);
+            } else {
+                right_choice.style('background-color', 'red');
+                wrong_count++;
+                setTimeout(function () {me.wrongDisplay()}, 200);
+            }
         }
     }
 
@@ -222,7 +229,6 @@ var Round1 = function () {
         clear();
         myTimer.show();
         myTimer.html(timer_draw)
-        myTimer.position(width/2, 65);
         background("#8bc4b6");
         imageMode(CENTER);
         rectMode(CENTER);
@@ -242,6 +248,7 @@ var Transition = function ( state ) {
     myState = state;
 
     this.start = function () {
+        done = true;
         /*
         data = {
             answers: answers_ten,
@@ -264,16 +271,30 @@ var Transition = function ( state ) {
     }
 
     this.finisher = function () {
+        console.log("IN FINISHER");
         if (done == true) {
+            console.log("NEXT ROUND!");
+            myR2 = new Round1();
+            myR2.start();
             //Recognize the key press
         }
     }
 
     this.display = function () {
-        if (myState == 2){
-            imageMode(CORNER);
-            image(overlay, 0, 0, width, height);
-            text("You seem to really know what you like. But now let us help you get to know yourself even better!", width/2, 300);
+        if (myState == 1){
+            console.log("Transition Display " + myState)
+            myR1 = new Round1();
+            console.log("Round 1 Created");
+            myR1.start();        
+            console.log("Round 1 Started");
+        }
+        if(myState == 2){
+            question_text.remove();
+            left_choice.remove();
+            right_choice.remove();
+            console.log("DISPLAY ME SENPAI");
+            text("When you're ready, press enter", width/2, 300);
+            
         }
     }
 
@@ -289,10 +310,8 @@ var transitionGame = function (state) {
 function keyPressed () {
     if (gameState == 0) {
         if (keyCode === ENTER) {
-            gameState = 1;
-            myR1 = new Round1();
-            myR1.start();
-
+            //gameState = 1;
+            transitionGame(1);
         }
     } else if (gameState == 1) {
         clearInterval(timerinterval);
@@ -305,6 +324,7 @@ function keyPressed () {
 
     } else if (gameState == 2) {
         if (keyCode === ENTER) {
+            console.log("ENTER pressed in state 2");
             myTrans.finisher();
         }
         
@@ -350,7 +370,6 @@ function update_timer(){
     }
     timer_draw = ('0' + timer_sec).slice(-2);
     myTimer.html(timer_draw)
-    myTimer.position(width/2, 65);
 }
 
 
