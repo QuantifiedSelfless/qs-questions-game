@@ -97,6 +97,7 @@ function setup() {
     var canv = createCanvas(windowWidth,windowHeight);
     canv.parent("bgCanvas");
     background("#8bc4b6");
+    stroke(255);
     left_choice = createImg("blank.png");
     right_choice = createImg("blank.png");
     aspect = podium.width/podium.height;
@@ -251,6 +252,7 @@ var Round1 = function () {
         fill(0);
         textAlign(CENTER);
         fill("#483d39");
+        stroke(255);
     }
 }
 // END OF ROUND 1 OBJECT
@@ -292,33 +294,46 @@ var Transition = function ( state ) {
     }
 
     this.display = function () {
-        if (this.myState == 1){
+        if (this.myState == 1){ //Round 1
             timer_sec = 10;
             myR1 = new Round1();
             myR1.start();        
         }
-        if(this.myState == 2){
+        else if(this.myState == 2){ //Round 2 Transition Screen
             question_text.remove();
             left_choice.remove();
             right_choice.remove();
             text("When you're ready, press enter", width/2, 300);   
         }
-        if(this.myState == 3){
+        else if(this.myState == 3){ //Round 2
             timer_sec = 5;
             myR2 = new Round1();
             myR2.start();
         }
-        if(this.myState == 4){
+        else if(this.myState == 4){ //Round 3 Transition Screen
             question_text.remove();
             left_choice.remove();
             right_choice.remove();
             text("Time to Enter Round 3, Yo.", width/2, 300);
         }
-        if(this.myState == 5){
+        else if(this.myState == 5){ //Round 3
             timer_sec = 3;
             myR3 = new Round1();
             myR3.start();
         }
+        else if(this.myState == 6){ //Results Transition Screen
+            question_text.remove();
+            left_choice.remove();
+            right_choice.remove();
+            text("Press enter to view your results!", width/2, 300);
+        }
+        else if(this.myState == 7){ //Results Screen
+            //draw results screen
+            myTimer.hide();
+            timerinterval = setInterval(results, 25);
+            
+        }
+
     }
 }
 
@@ -373,7 +388,9 @@ function keyPressed () {
         }
         
     } else if (gameState == 6) {
-        
+        if (keyCode === ENTER) {
+            myTrans.finisher(gameState);
+        }
     }
 
 }
@@ -395,6 +412,20 @@ function update_timer(){
 
 
 function results(){
+
+    clear();
+    background("#8bc4b6");
+    imageMode(CENTER);
+    rectMode(CENTER);
+    fill(255);
+    stroke(255);
+    rect(width/2, height-pod_height-200, width*0.75, pod_height+200);
+    image(podium, width/2, height - (pod_height/2), pod_width, pod_height);
+    if(percent < 48) percent++;
+    else{
+        clearInterval(results_timer);
+        prog_done = true;
+    }
     rectMode(CORNER);
     bar_width = 800;
     bar_height = 50;
@@ -418,11 +449,7 @@ function results(){
 }
 
 function increase_percentage(){
-    if(percent < 48) percent++;
-    else{
-        clearInterval(results_timer);
-        prog_done = true;
-    }
+
 }
 
 
