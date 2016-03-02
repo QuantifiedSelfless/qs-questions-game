@@ -3,9 +3,9 @@ Sprites are positioned from their center, while DOM images are positioned from t
 To deal with this, we subtract half the image width/height from the values of the sprite to position the DOM image.
 */
 
-var timer_draw = '00';
+var timer_draw = '10';
 var timer_min = 0;
-var timer_sec = 5;
+var timer_sec = 10;
 var timer_text;
 var time_start = false;
 var question_count = 0;
@@ -58,7 +58,6 @@ var mock_answers = {
 };
 var percent = 0;
 var results_timer;
-var timerinterval;
 var prog_done = false;
 var y_velocity = 0;
 var y2_velocity = 0;
@@ -73,6 +72,7 @@ var answers_ten = [];
 var answers_twenty = [];
 var to_ask_index = 0;
 var myTimer;
+
 
 var gameState = 0;
 
@@ -129,28 +129,32 @@ var Round1 = function () {
         console.log("Creating questions, drawing canvas, spawning inital question.");
         this.createQuestions();
         this.drawCanvas();
-        this.questionTime();
+        this.questionTime(gameState);
     }
 
-    this.questionTime= function () {
-        //console.log(this);
+    this.questionTime= function (state) {
         if (this.q_num < 10) {
+            console.log("LESS q_num: " + this.q_num);
             this.askQuestion()
         } else {
-            //console.log("About to transition");
-            transitionGame(2);
+            console.log("GREATER q_num: " + this.q_num);
+            transitionGame(state+1);
         }
     }
 
     this.askQuestion= function () {
         //console.log('asking a question :)')
+        this.input = true;
+        update_timer();
         timerinterval = setInterval(update_timer, 1000);
         question_text.remove();
         left_choice.remove();
         right_choice.remove();
+        console.log("qnum before this.question" + this.q_num);
         this.question = this.QR1[this.q_num];
         //Increment for next pass
         this.q_num += 1;
+        console.log("qnum after increment: " + this.q_num);
         left_text = this.question['question_left'];
         right_text = this.question['question_right'];
         question_text = this.question['question_text'];
@@ -164,22 +168,25 @@ var Round1 = function () {
     }
 
     this.leftFire= function ( round ) {
+        this.input = false;
+        console.log(round);
         me = this;
         myq = parseInt(this.question["question_number"]);
         mya = mock_answers[myq];
         if(round == 1){
             answers_ten.push({myq: 'A'});
+            left_choice.style('background-color', 'green');
+            setTimeout(function () {me.questionTime(gameState)}, 200);
         }
         else{
             answers_twenty.push({myq: 'A'});
             if ('A' == mya) {
                 left_choice.style('background-color', 'green');
-                setTimeout(function () {me.questionTime()}, 200);
+                setTimeout(function () {me.questionTime(gameState)}, 200);
             } else {
                 left_choice.style('background-color', 'red');
                 wrong_count++;
-                setTimeout(function () {me.wrongDisplay()}, 200);
-                   
+                setTimeout(function () {me.wrongDisplay(gameState)}, 200);   
             }
         }
 
@@ -187,21 +194,26 @@ var Round1 = function () {
     }
 
     this.rightFire = function ( round ) {
+        this.input = false;
+        console.log(round);
         me = this;
         myq = parseInt(this.question["question_number"]);
         mya = mock_answers[myq];
         if(round == 1){
             answers_ten.push({myq: 'B'});
+            right_choice.style('background-color', 'green');
+            setTimeout(function () {me.questionTime(gameState)}, 200);
         }
         else{
             answers_twenty.push({myq: 'B'});
             if ('B' == mya) {
+                console.log("rightFire qnum: " + me.q_num);
                 right_choice.style('background-color', 'green');
-                setTimeout(function () {me.questionTime()}, 200);
+                setTimeout(function () {me.questionTime(gameState)}, 200);
             } else {
                 right_choice.style('background-color', 'red');
                 wrong_count++;
-                setTimeout(function () {me.wrongDisplay()}, 200);
+                setTimeout(function () {me.wrongDisplay(gameState)}, 200);
             }
         }
     }
@@ -222,7 +234,7 @@ var Round1 = function () {
         right_choice.removeClass("hide"); 
         question_text.removeClass("hide");
         this.drawCanvas();
-        this.questionTime();
+        this.questionTime(gameState);
     }
 
     this.drawCanvas = function () {
@@ -244,11 +256,11 @@ var Round1 = function () {
 // END OF ROUND 1 OBJECT
 
 var Transition = function ( state ) {
-    var done = false;
-    myState = state;
+    this.done = false;
+    this.myState = state;
 
     this.start = function () {
-        done = true;
+        this.done = true;
         /*
         data = {
             answers: answers_ten,
@@ -270,37 +282,48 @@ var Transition = function ( state ) {
         */
     }
 
-    this.finisher = function () {
+    this.finisher = function (state) {
         console.log("IN FINISHER");
-        if (done == true) {
+        if (this.done == true) {
             console.log("NEXT ROUND!");
-            myR2 = new Round1();
-            myR2.start();
+            transitionGame(state + 1);
             //Recognize the key press
         }
     }
 
     this.display = function () {
-        if (myState == 1){
-            console.log("Transition Display " + myState)
+        if (this.myState == 1){
+            timer_sec = 10;
             myR1 = new Round1();
-            console.log("Round 1 Created");
             myR1.start();        
-            console.log("Round 1 Started");
         }
-        if(myState == 2){
+        if(this.myState == 2){
             question_text.remove();
             left_choice.remove();
             right_choice.remove();
-            console.log("DISPLAY ME SENPAI");
-            text("When you're ready, press enter", width/2, 300);
-            
+            text("When you're ready, press enter", width/2, 300);   
+        }
+        if(this.myState == 3){
+            timer_sec = 5;
+            myR2 = new Round1();
+            myR2.start();
+        }
+        if(this.myState == 4){
+            question_text.remove();
+            left_choice.remove();
+            right_choice.remove();
+            text("Time to Enter Round 3, Yo.", width/2, 300);
+        }
+        if(this.myState == 5){
+            timer_sec = 3;
+            myR3 = new Round1();
+            myR3.start();
         }
     }
-
 }
 
 var transitionGame = function (state) {
+    console.log("TRANSITION TO STATE " + state)
     gameState = state;
     myTrans = new Transition(gameState);
     myTrans.start();
@@ -308,31 +331,46 @@ var transitionGame = function (state) {
 };
 
 function keyPressed () {
-    if (gameState == 0) {
+    if (gameState == 0) { //Initial Screen
         if (keyCode === ENTER) {
             //gameState = 1;
             transitionGame(1);
         }
-    } else if (gameState == 1) {
+    } else if (gameState == 1) { //Round 1
         clearInterval(timerinterval);
-        timer_sec = 8;
-        if (keyCode === LEFT_ARROW) {
-            myR1.leftFire();
-        } else if(keyCode === RIGHT_ARROW) {
-            myR1.rightFire();
+        timer_sec = 10;
+        if (keyCode === LEFT_ARROW && myR1.input === true) {
+            myR1.leftFire(1);
+        } else if(keyCode === RIGHT_ARROW && myR1.input === true) {
+            myR1.rightFire(1);
         }
 
-    } else if (gameState == 2) {
+    } else if (gameState == 2) { //Transition 1
         if (keyCode === ENTER) {
-            console.log("ENTER pressed in state 2");
-            myTrans.finisher();
+            myTrans.finisher(gameState);
         }
         
-    } else if (gameState == 3) {
+    } else if (gameState == 3) { //Round 2
+        clearInterval(timerinterval);
+        timer_sec = 5;
+        if (keyCode === LEFT_ARROW && myR2.input === true) {
+            myR2.leftFire(2);
+        } else if(keyCode === RIGHT_ARROW && myR2.input === true) {
+            myR2.rightFire(2);
+        }
         
     } else if (gameState == 4) {
-        
+        if (keyCode === ENTER) {
+            myTrans.finisher(gameState);
+        }        
     } else if (gameState == 5) {
+        clearInterval(timerinterval);
+        timer_sec = 3;
+        if (keyCode === LEFT_ARROW && myR3.input === true) {
+            myR3.leftFire(3);
+        } else if(keyCode === RIGHT_ARROW && myR3.input === true) {
+            myR3.rightFire(3);
+        }
         
     } else if (gameState == 6) {
         
@@ -340,36 +378,19 @@ function keyPressed () {
 
 }
 
-function newQuestion() {
-    //background(255,255,255);
-    if(start){
-        clearInterval(timerinterval);
-        timer_sec = 5;
-    }
-    
-  
-    else{
-
-        // Draw the results screen
-        clearInterval(timerinterval);
-        end = true;
-        if(!wrong_prompt) results_timer = setInterval(increase_percentage, 20);
-        // Refresh page here
-    }
-
-}
-
 function update_timer(){
-    if( timer_min == 0 && timer_sec == 0){
-        question_num = q_nums.splice(to_ask_index,1);    
+    timer_draw = ('0' + timer_sec).slice(-2);
+    console.log(timer_draw);
+    myTimer.html(timer_draw)
+    if( timer_min == 0 && timer_sec == 0){    
     } else if(timer_sec == 0){
         timer_min--;
         timer_sec = 59;
     } else{
         timer_sec--;
     }
-    timer_draw = ('0' + timer_sec).slice(-2);
-    myTimer.html(timer_draw)
+
+    
 }
 
 
