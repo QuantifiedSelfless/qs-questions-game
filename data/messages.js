@@ -1,0 +1,5 @@
+var wrong_messages_round2 = ["DesignCraft would like you to think for a moment about what you just said.", "Are you sure about that?", "Really?", "Huh...", "Nope. That's not right.", "I don't think that's very honest.", "Seriously?", "You're acting suspicious.","Please Answer Honestly.", "Are you sure you're okay?" ];
+
+var wrong_messages_round3 = ["A fine will be billed to your DesignCraft account for that answer.", "I don't think you are who you think you are.", "You do realize identity fraud is a serious crime, right?","Do you think this is funny?", "Oh. I see how it is.", "We will not hesitate to arrest you", "Looks like someone is due for reprogramming.", "This is unacceptable behavior.", "You should know better than this.","You need to take this seriously."];
+
+var results_messages = ["Your fraudulent activity has been reported.", "I don't think you are who you say you are.", "You could use some training, but you know yourself decently!", "Good Work, you really know yourself well."];

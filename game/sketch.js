@@ -14,6 +14,7 @@ var questions = [];
 var left = [];
 var right = [];
 var q_nums = [];
+var percent_acc = 0;
 for(var i = 0; i < q_json.length; i++){
 
     questions.push(q_json[i].question_text);
@@ -92,7 +93,7 @@ function setup() {
 
     myTimer = createP();
     myTimer.hide();
-    question_text = createDiv('Click To Start'); //dummy, so that we can have remove() as the first line of the newquestion function
+    question_text = createDiv('Press ENTER to Start'); //dummy, so that we can have remove() as the first line of the newquestion function
     question_text.class("questionText");
     var canv = createCanvas(windowWidth,windowHeight);
     canv.parent("bgCanvas");
@@ -223,7 +224,23 @@ var Round1 = function () {
         me = this;
         imageMode(CORNER);
         image(overlay, 0, 0, width, height);
-        text("DesignCraft would like you to take a moment to think about what you just said.", width/2, 300);
+
+        if(gameState == 3){
+            var random = _.random(0, wrong_messages_round2.length - 1);
+            var message = wrong_messages_round2[random];
+            _.remove(wrong_messages_round2, function (n){
+                return n == message;
+            });
+        }
+        else if(gameState == 5){
+            var random = _.random(0, wrong_messages_round3.length - 1);
+            var message = wrong_messages_round3[random];
+            _.remove(wrong_messages_round3, function (n){
+                return n == message;
+            });
+        }        
+
+        text(message, width/2, 300);
         left_choice.class("hide");
         right_choice.class("hide");
         question_text.class("hide");
@@ -303,7 +320,9 @@ var Transition = function ( state ) {
             question_text.remove();
             left_choice.remove();
             right_choice.remove();
-            text("When you're ready, press enter", width/2, 300);   
+			textFont("Exo2");
+			strokeWeight(0);
+            text("When you're ready, press ENTER to start round 2!", width/2, 300);   
         }
         else if(this.myState == 3){ //Round 2
             timer_sec = 5;
@@ -314,7 +333,8 @@ var Transition = function ( state ) {
             question_text.remove();
             left_choice.remove();
             right_choice.remove();
-            text("Time to Enter Round 3, Yo.", width/2, 300);
+			strokeWeight(0)
+            text("When you're ready, press ENTER to begin the last round.", width/2, 300);
         }
         else if(this.myState == 5){ //Round 3
             timer_sec = 3;
@@ -330,7 +350,7 @@ var Transition = function ( state ) {
         else if(this.myState == 7){ //Results Screen
             //draw results screen
             myTimer.hide();
-            timerinterval = setInterval(results, 25);
+			if(prog_done == false) results_timer = setInterval(results, 25);
             
         }
 
@@ -421,7 +441,9 @@ function results(){
     stroke(255);
     rect(width/2, height-pod_height-200, width*0.75, pod_height+200);
     image(podium, width/2, height - (pod_height/2), pod_width, pod_height);
-    if(percent < 48) percent++;
+	percent = ((20 - wrong_count)/20)*100;	
+	console.log(percent);	
+    if(percent_acc < percent) percent_acc++;
     else{
         clearInterval(results_timer);
         prog_done = true;
@@ -436,20 +458,21 @@ function results(){
     text("Results", width/2, 100);
     rect(bar_x, height/2, bar_width, bar_height);
     fill(139,196,182);
-    rect(bar_x, height/2, ((percent * bar_width)/(100)), bar_height);
+    rect(bar_x, height/2, ((percent_acc * bar_width)/(100)), bar_height);
     textSize(32);
     fill(42,56,47);
     stroke(139,196,182);
     strokeWeight(3);
-    text(percent + "%", width/2, height/2+35);
+    text(percent_acc + "%", width/2, height/2+35);
+	strokeWeight(0);
+
+	// Replace this with an if statement. Case and inequality don't mesh.
     if(prog_done){
+		if(percent == 0) var message = results_messages[0];
+		else if(percent > 0 && percent < 60) var message = results_messages[1];
+		else if(percent >= 60 && percent < 100) var message = results_messages[2];
+		else if(percent == 100) var message = results_messages[3];
         strokeWeight(0);
-        text("I don't think you are who you say you are.", width/2, 300);
+        text(message, width/2, 300);
     } 
 }
-
-function increase_percentage(){
-
-}
-
-
