@@ -1,5 +1,6 @@
 /*TODO/*
-* Do something when time runs out
+* No timer in round 1
+* For rounds 2 and 3, answer with "correct" answer.
 * AJAX call to get 'recommended' answers
 * Finish CSV Parser
 * Add more info to results screen
@@ -419,21 +420,26 @@ function keyPressed () {
 }
 
 function update_timer(){
-    timer_draw = ('0' + timer_sec).slice(-2);
-    console.log(timer_draw);
-    myTimer.html(timer_draw)
-    if( timer_min == 0 && timer_sec == 0){    
-		//If round 1, choose randomly for them. Else, choose their reccomended answer, display a messsage
-    } else if(timer_sec == 0){
-        timer_min--;
-        timer_sec = 59;
-    } else{
-        timer_sec--;
-    }
+	if(gameState == 1) myTimer.hide();
+	else{
+		timer_draw = ('0' + timer_sec).slice(-2);
+		console.log(timer_draw);
+		myTimer.html(timer_draw)
+		if( timer_min == 0 && timer_sec == 0){    
+			//If round 1, choose randomly for them. Else, choose their reccomended answer, display a messsage
+			if(gameState == 3) timer_sec = 10;
+			else if(gameState == 5) timer_sec = 5;
+			clearInterval(timerinterval);
+			// This is where we'll choose the "correct" answer.
 
-    
+		} else if(timer_sec == 0){
+			timer_min--;
+			timer_sec = 59;
+		} else{
+			timer_sec--;
+		}
+	}
 }
-
 
 function results(){
 
