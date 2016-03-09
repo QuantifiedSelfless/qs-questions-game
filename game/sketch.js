@@ -1,6 +1,9 @@
-/* --Notes-- /*
-Sprites are positioned from their center, while DOM images are positioned from their top left corner.
-To deal with this, we subtract half the image width/height from the values of the sprite to position the DOM image.
+/*TODO/*
+* Do something when time runs out
+* AJAX call to get 'recommended' answers
+* Finish CSV Parser
+* Add more info to results screen
+* Visuals (Highlight colors, white rectangle position
 */
 
 var timer_draw = '10';
@@ -420,6 +423,7 @@ function update_timer(){
     console.log(timer_draw);
     myTimer.html(timer_draw)
     if( timer_min == 0 && timer_sec == 0){    
+		//If round 1, choose randomly for them. Else, choose their reccomended answer, display a messsage
     } else if(timer_sec == 0){
         timer_min--;
         timer_sec = 59;
