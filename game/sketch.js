@@ -1,9 +1,11 @@
 /*TODO/*
-* No timer in round 1
+***Priority***
 * For rounds 2 and 3, answer with "correct" answer.
+* Add more info to results screen
+
+***Later***
 * AJAX call to get 'recommended' answers
 * Finish CSV Parser
-* Add more info to results screen
 * Visuals (Highlight colors, white rectangle position
 */
 
@@ -105,7 +107,6 @@ function setup() {
     stroke(255);
     left_choice = createImg("blank.png");
     right_choice = createImg("blank.png");
-    aspect = podium.width/podium.height;
     pod_width = width * 0.75;
     pod_height = podium.height/(podium.width/(pod_width))
     textFont("Exo2");
@@ -426,7 +427,7 @@ function update_timer(){
 		console.log(timer_draw);
 		myTimer.html(timer_draw)
 		if( timer_min == 0 && timer_sec == 0){    
-			//If round 1, choose randomly for them. Else, choose their reccomended answer, display a messsage
+			// Reset the timer value for the next question, and stop it from counting.
 			if(gameState == 3) timer_sec = 10;
 			else if(gameState == 5) timer_sec = 5;
 			clearInterval(timerinterval);
@@ -476,7 +477,6 @@ function results(){
     text(percent_acc + "%", width/2, height/2+35);
 	strokeWeight(0);
 
-	// Replace this with an if statement. Case and inequality don't mesh.
     if(prog_done){
 		if(percent == 0) var message = results_messages[0];
 		else if(percent > 0 && percent < 60) var message = results_messages[1];
