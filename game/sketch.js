@@ -4,8 +4,6 @@
 * Add more info to results screen
 
 ***Later***
-* AJAX call to get 'recommended' answers
-* Finish CSV Parser
 * Visuals (Highlight colors, white rectangle position
 */
 
@@ -109,7 +107,7 @@ function setup() {
     right_choice = createImg("blank.png");
     pod_width = width * 0.75;
     pod_height = podium.height/(podium.width/(pod_width))
-    textFont("Exo2");
+    textFont("Exo 2");
 
 }
 
@@ -284,27 +282,27 @@ var Transition = function ( state ) {
     this.myState = state;
 
     this.start = function () {
-        this.done = true;
-        /*
-        data = {
-            answers: answers_ten,
-        }
-        $.ajax({
-        type: 'POST',
-        url: '/recommender/answers',
-        data: data,
-        success: function( myRecs ) {
-            //Replace this with our good variables!
-            mock_answers = myRecs;
-            text("Press Enter when you're ready to keep it going!", width/2, 500);
-            done = true;
-        }
-        error: function(xhr) {
-            alert("An error occured: " + xhr.status + " " + xhr.statusText);
-        }
-    });
-        */
-    }
+		this.done = true;
+	/*
+	data = answers_ten;
+	$.ajax({
+					type: 'POST',
+					url: 'exhibiturl',
+					data: data, 
+					success: function(resp) {
+						console.log(resp);
+						mock_answers = resp.recommendations
+						this.done = true;
+
+					},
+					error: function(resp) {
+						console.log(Error: Ajax call failed);
+						this.done = true;
+
+					}
+			});
+		*/
+		}
 
     this.finisher = function (state) {
         console.log("IN FINISHER");
@@ -326,11 +324,12 @@ var Transition = function ( state ) {
             left_choice.remove();
             right_choice.remove();
 			textFont("Exo2");
+			textSize(36);
 			strokeWeight(0);
             text("When you're ready, press ENTER to start round 2!", width/2, 300);   
         }
         else if(this.myState == 3){ //Round 2
-            timer_sec = 5;
+            timer_sec = 10;
             myR2 = new Round1();
             myR2.start();
         }
@@ -342,7 +341,7 @@ var Transition = function ( state ) {
             text("When you're ready, press ENTER to begin the last round.", width/2, 300);
         }
         else if(this.myState == 5){ //Round 3
-            timer_sec = 3;
+            timer_sec = 5;
             myR3 = new Round1();
             myR3.start();
         }
@@ -392,7 +391,7 @@ function keyPressed () {
         
     } else if (gameState == 3) { //Round 2
         clearInterval(timerinterval);
-        timer_sec = 5;
+        timer_sec = 10;
         if (keyCode === LEFT_ARROW && myR2.input === true) {
             myR2.leftFire(2);
         } else if(keyCode === RIGHT_ARROW && myR2.input === true) {
@@ -405,7 +404,7 @@ function keyPressed () {
         }        
     } else if (gameState == 5) {
         clearInterval(timerinterval);
-        timer_sec = 3;
+        timer_sec = 5;
         if (keyCode === LEFT_ARROW && myR3.input === true) {
             myR3.leftFire(3);
         } else if(keyCode === RIGHT_ARROW && myR3.input === true) {
@@ -428,9 +427,23 @@ function update_timer(){
 		myTimer.html(timer_draw)
 		if( timer_min == 0 && timer_sec == 0){    
 			// Reset the timer value for the next question, and stop it from counting.
-			if(gameState == 3) timer_sec = 10;
-			else if(gameState == 5) timer_sec = 5;
+			if(gameState == 3){
+				timer_sec = 10;
+				myq = parseInt(myR2.question["question_number"]);
+				r = 2;
+				robj = myR2;
+			}
+			else if(gameState == 5){
+				timer_sec = 5;
+				myq = parseInt(myR3.question["question_number"]);
+				r = 3;
+				robj = myR3;
+			}
 			clearInterval(timerinterval);
+			//TODO: Choose "correct" answer on timeout
+			mya = mock_answers[myq];
+			if ('A' == mya) robj.leftFire(r);
+			else if ('B' == mya) robj.rightFire(r)
 			// This is where we'll choose the "correct" answer.
 
 		} else if(timer_sec == 0){
