@@ -1,12 +1,17 @@
 /*TODO/*
 ***Priority***
-* For rounds 2 and 3, answer with "correct" answer.
 * Add more info to results screen
+* Change result bar timeout length for pi
 
 ***Later***
 * Visuals (Highlight colors, white rectangle position
 */
 
+
+var socket = io.connect('http://localhost:3000')
+socket.on('rfid', function(data){
+    setTimeout(function() { window.location = "http://localhost:8000"}, 2000)
+})
 var timer_draw = '10';
 var timer_min = 0;
 var timer_sec = 10;
@@ -368,6 +373,65 @@ var transitionGame = function (state) {
     myTrans.start();
     myTrans.display();
 };
+//TODO: Implement Pi Buttons
+socket.on('button1', function(){
+	if (gameState == 0){
+		transitionGame(1);
+	}
+	else if (gameState == 1){
+		clearInterval(timerinterval);
+		myR1.leftFire(1);
+	}
+	else if (gameState == 2){
+		myTrans.finisher(gameState);
+	}
+	else if (gameState == 3){
+		clearInterval(timerinterval);
+        timer_sec = 10;
+		myR2.leftFire(2);
+	}
+	else if (gameState == 4){
+		myTrans.finisher(gameState);
+	}		
+	else if (gameState == 5){
+		clearInterval(timerinterval);
+        timer_sec = 5;
+		myR3.leftFire(3);
+	}
+	else if (gameState == 6){
+		myTrans.finisher(gameState);
+	}
+  })
+
+socket.on('button2', function(){
+	if (gameState == 0){
+		transitionGame(1);
+	}
+	else if (gameState == 1){
+		clearInterval(timerinterval);
+		myR1.rightFire(1);
+	}
+	else if (gameState == 2){
+		myTrans.finisher(gameState);
+	}
+	else if (gameState == 3){
+		clearInterval(timerinterval);
+        timer_sec = 10;
+		myR2.rightFire(2);
+	}
+	else if (gameState == 4){
+		myTrans.finisher(gameState);
+	}		
+	else if (gameState == 5){
+		clearInterval(timerinterval);
+        timer_sec = 5;
+		myR3.rightFire(3);
+	}
+	else if (gameState == 6){
+		myTrans.finisher(gameState);
+	}
+	
+  })
 
 function keyPressed () {
     if (gameState == 0) { //Initial Screen
