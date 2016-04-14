@@ -296,7 +296,7 @@ var Transition = function ( state ) {
                 data: {answers: data}, 
                 success: function(resp) {
                     console.log(resp);
-                    mock_answers = resp.data.recommendations;
+                    mock_answers = resp.data.recommendations.map(function(e){ return e.replace(/[0-9]/g, '');});
                     this.done = true;
                 },
                 error: function(resp) {
