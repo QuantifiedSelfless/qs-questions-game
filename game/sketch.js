@@ -288,12 +288,14 @@ var Transition = function ( state ) {
 
     this.start = function () {
         if (gameState == 3){ //If ready for round 2...
-            data = answers_ten.map(function(e){ return e.myq;});
+            data = getURLParams()
+            data["answers"] = JSON.stringify(answers_ten.map(function(e){ return e.myq;}));
+
             console.log(answers_ten);
             $.ajax({
-                type: 'GET',
-                url: "http://quantifiedselfbackend.local:6060/recommend_processor/recommend?userid=b9bef55d-e1c2-418b-979d-62762902ee38",
-                data: {answers: data}, 
+                type: 'POST',
+                url: "http://quantifiedselfbackend.local:6060/recommend_processor/recommend",
+                data: data,
                 success: function(resp) {
                     console.log(resp);
                     mock_answers = resp.data.recommendations.map(function(e){ return e.replace(/[0-9]/g, '');});
