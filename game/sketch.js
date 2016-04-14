@@ -1,5 +1,5 @@
 /*TODO/*
-***Priority***
+**Priority***
 * Add more info to results screen
 * Change result bar timeout length for pi
 
@@ -101,7 +101,7 @@ function setup() {
 
     myTimer = createP();
     myTimer.hide();
-    question_text = createDiv('Press ENTER to Start'); //dummy, so that we can have remove() as the first line of the newquestion function
+    question_text = createDiv('Press a button to Start'); //dummy, so that we can have remove() as the first line of the newquestion function
     question_text.class("questionText");
     var canv = createCanvas(windowWidth,windowHeight);
     canv.parent("bgCanvas");
@@ -282,15 +282,15 @@ var Round1 = function () {
 // END OF ROUND 1 OBJECT
 
 var Transition = function ( state ) {
-    this.done = false;
     this.myState = state;
-
+    this.done = false;
     this.start = function () {
-        if (gameState == 3){ //If ready for round 2...
+        if (gameState == 2){ //If ready for round 2...
             data = getURLParams()
             data = {userid: "b9bef55d-e1c2-418b-979d-62762902ee38"}
             data["answers"] = JSON.stringify(answers_ten.map(function(e){ return e.myq;}));
             console.log(data);
+	    var me = this;
 
             $.ajax({
                 type: 'POST',
@@ -299,11 +299,12 @@ var Transition = function ( state ) {
                 success: function(resp) {
                     console.log(resp);
                     mock_answers = resp.data.recommendations.map(function(e){ return e.replace(/[0-9]/g, '');});
-                    this.done = true;
+                    me.done = true;
+		    text("When you're ready, press a button to begin the last round.", width/2, 300);
                 },
                 error: function(resp) {
                     console.log("Error: Ajax call failed");
-                    this.done = true;
+                    me.done = true;
                 }
             });
         }
@@ -313,6 +314,7 @@ var Transition = function ( state ) {
 
     this.finisher = function (state) {
         console.log("IN FINISHER");
+	console.log(this.done)
         if (this.done == true) {
             console.log("NEXT ROUND!");
             transitionGame(state + 1);
@@ -333,7 +335,7 @@ var Transition = function ( state ) {
 			textFont("Exo2");
 			textSize(36);
 			strokeWeight(0);
-            text("When you're ready, press ENTER to start round 2!", width/2, 300);   
+            text("When you see \"Ready\" below, press a button to begin round 2!", width/2, 300);   
         }
         else if(this.myState == 3){ //Round 2
             timer_sec = 10;
@@ -345,7 +347,7 @@ var Transition = function ( state ) {
             left_choice.remove();
             right_choice.remove();
 			strokeWeight(0)
-            text("When you're ready, press ENTER to begin the last round.", width/2, 300);
+            text("When you're ready, press a button to begin the last round.", width/2, 300);
         }
         else if(this.myState == 5){ //Round 3
             timer_sec = 5;
@@ -380,14 +382,14 @@ socket.on('button1', function(){
 	if (gameState == 0){
 		transitionGame(1);
 	}
-	else if (gameState == 1){
+	else if (gameState == 1 && myR1.input === true){
 		clearInterval(timerinterval);
 		myR1.leftFire(1);
 	}
 	else if (gameState == 2){
 		myTrans.finisher(gameState);
 	}
-	else if (gameState == 3){
+	else if (gameState == 3 && myR2.input === true){
 		clearInterval(timerinterval);
         timer_sec = 10;
 		myR2.leftFire(2);
@@ -395,7 +397,7 @@ socket.on('button1', function(){
 	else if (gameState == 4){
 		myTrans.finisher(gameState);
 	}		
-	else if (gameState == 5){
+	else if (gameState == 5 && myR3.input === true){
 		clearInterval(timerinterval);
         timer_sec = 5;
 		myR3.leftFire(3);
@@ -409,14 +411,14 @@ socket.on('button2', function(){
 	if (gameState == 0){
 		transitionGame(1);
 	}
-	else if (gameState == 1){
+	else if (gameState == 1 && myR1.input === true){
 		clearInterval(timerinterval);
 		myR1.rightFire(1);
 	}
 	else if (gameState == 2){
 		myTrans.finisher(gameState);
 	}
-	else if (gameState == 3){
+	else if (gameState == 3 && myR2.input === true){
 		clearInterval(timerinterval);
         timer_sec = 10;
 		myR2.rightFire(2);
@@ -424,7 +426,7 @@ socket.on('button2', function(){
 	else if (gameState == 4){
 		myTrans.finisher(gameState);
 	}		
-	else if (gameState == 5){
+	else if (gameState == 5 && myR3.input === true){
 		clearInterval(timerinterval);
         timer_sec = 5;
 		myR3.rightFire(3);
