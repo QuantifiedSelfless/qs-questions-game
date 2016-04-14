@@ -288,6 +288,7 @@ var Transition = function ( state ) {
     this.start = function () {
         if (gameState == 3){ //If ready for round 2...
             data = getURLParams()
+            data = {userid: "b9bef55d-e1c2-418b-979d-62762902ee38"}
             data["answers"] = JSON.stringify(answers_ten.map(function(e){ return e.myq;}));
             console.log(data);
 
