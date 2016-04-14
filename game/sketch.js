@@ -7,7 +7,6 @@
 * Visuals (Highlight colors, white rectangle position
 */
 
-
 var socket = io.connect('http://localhost:3000')
 socket.on('rfid', function(data){
     setTimeout(function() { window.location = "http://localhost:3000"}, 2000)
@@ -290,8 +289,8 @@ var Transition = function ( state ) {
         if (gameState == 3){ //If ready for round 2...
             data = getURLParams()
             data["answers"] = JSON.stringify(answers_ten.map(function(e){ return e.myq;}));
+            console.log(data);
 
-            console.log(answers_ten);
             $.ajax({
                 type: 'POST',
                 url: "http://quantifiedselfbackend.local:6060/recommend_processor/recommend",
