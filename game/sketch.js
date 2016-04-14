@@ -10,7 +10,7 @@
 
 var socket = io.connect('http://localhost:3000')
 socket.on('rfid', function(data){
-    setTimeout(function() { window.location = "http://localhost:8000"}, 2000)
+    setTimeout(function() { window.location = "http://localhost:3000"}, 2000)
 })
 var timer_draw = '10';
 var timer_min = 0;
@@ -184,7 +184,7 @@ var Round1 = function () {
         myq = parseInt(this.question["question_number"]);
         mya = mock_answers[myq];
         if(round == 1){
-            answers_ten.push({myq: 'A'});
+            answers_ten.push({myq: myq + 'A'});
             left_choice.style('background-color', 'green');
             setTimeout(function () {me.questionTime(gameState)}, 200);
         }
@@ -210,7 +210,7 @@ var Round1 = function () {
         myq = parseInt(this.question["question_number"]);
         mya = mock_answers[myq];
         if(round == 1){
-            answers_ten.push({myq: 'B'});
+            answers_ten.push({myq: myq + 'B'});
             right_choice.style('background-color', 'green');
             setTimeout(function () {me.questionTime(gameState)}, 200);
         }
@@ -287,27 +287,27 @@ var Transition = function ( state ) {
     this.myState = state;
 
     this.start = function () {
-		this.done = true;
-	/*
-	data = answers_ten;
-	$.ajax({
-					type: 'POST',
-					url: 'exhibiturl',
-					data: data, 
-					success: function(resp) {
-						console.log(resp);
-						mock_answers = resp.recommendations
-						this.done = true;
-
-					},
-					error: function(resp) {
-						console.log(Error: Ajax call failed);
-						this.done = true;
-
-					}
-			});
-		*/
-		}
+        if (gameState == 3){ //If ready for round 2...
+            data = answers_ten.map(function(e){ return e.myq;});
+            console.log(answers_ten);
+            $.ajax({
+                type: 'GET',
+                url: "http://quantifiedselfbackend.local:6060/recommend_processor/recommend?userid=b9bef55d-e1c2-418b-979d-62762902ee38",
+                data: {answers: data}, 
+                success: function(resp) {
+                    console.log(resp);
+                    mock_answers = resp.data.recommendations;
+                    this.done = true;
+                },
+                error: function(resp) {
+                    console.log("Error: Ajax call failed");
+                    this.done = true;
+                }
+            });
+        }
+        else
+            this.done = true;
+	}
 
     this.finisher = function (state) {
         console.log("IN FINISHER");
