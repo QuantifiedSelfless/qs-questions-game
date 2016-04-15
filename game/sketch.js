@@ -281,32 +281,50 @@ var Round1 = function () {
 }
 // END OF ROUND 1 OBJECT
 
+function make_AJAX_call(data, transition, tryCount, retryLimit){
+    $.ajax({
+        type: 'POST',
+        url: "http://quantifiedselfbackend.local:6060/recommend_processor/recommend",
+        data: data,
+        success: function(resp) {
+            console.log(resp);
+            mock_answers = resp.data.recommendations.map(function(e){ return e.replace(/[0-9]/g, '');});
+            text("Ready!", width/2, 400);
+            transition.done = true;
+            return true;
+        },
+        error: function(resp) {
+            console.log("Error: Ajax call failed");
+            tryCount++;
+            if (tryCount >= retryLimit){
+                text("Ready!", width/2, 400);
+                transition.done = true;
+                return true;
+            }
+            else { //Try again with exponential backoff.
+                setTimeout(function(){ 
+                    return make_AJAX_call(data, transition, tryCount, retryLimit);
+                }, Math.pow(2, tryCount) * 1000);
+                return false;
+            }
+        }
+    });
+    return false;
+}
+
 var Transition = function ( state ) {
     this.myState = state;
     this.done = false;
+
     this.start = function () {
         if (gameState == 2){ //If ready for round 2...
             data = getURLParams()
             data = {userid: "b9bef55d-e1c2-418b-979d-62762902ee38"}
             data["answers"] = JSON.stringify(answers_ten.map(function(e){ return e.myq;}));
             console.log(data);
-	    var me = this;
-
-            $.ajax({
-                type: 'POST',
-                url: "http://quantifiedselfbackend.local:6060/recommend_processor/recommend",
-                data: data,
-                success: function(resp) {
-                    console.log(resp);
-                    mock_answers = resp.data.recommendations.map(function(e){ return e.replace(/[0-9]/g, '');});
-                    me.done = true;
-		    text("When you're ready, press a button to begin the last round.", width/2, 300);
-                },
-                error: function(resp) {
-                    console.log("Error: Ajax call failed");
-                    me.done = true;
-                }
-            });
+            var me = this;
+            me.done = make_AJAX_call(data, this, 0, 3);
+            console.log(me.done);
         }
         else
             this.done = true;
@@ -314,7 +332,7 @@ var Transition = function ( state ) {
 
     this.finisher = function (state) {
         console.log("IN FINISHER");
-	console.log(this.done)
+	    console.log(this.done)
         if (this.done == true) {
             console.log("NEXT ROUND!");
             transitionGame(state + 1);
