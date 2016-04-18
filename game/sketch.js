@@ -3,7 +3,6 @@
 * Add more info to results screen
 * Change result bar timeout length for pi
 * mock answer randomization
-* Ready text position fix
 */
 
 var socket = io.connect('http://localhost:3000');
