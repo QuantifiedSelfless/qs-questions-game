@@ -2,15 +2,14 @@
 **Priority***
 * Add more info to results screen
 * Change result bar timeout length for pi
-
-***Later***
-* Visuals (Highlight colors, white rectangle position
+* mock answer randomization
+* Ready text position fix
 */
 
-var socket = io.connect('http://localhost:3000')
+var socket = io.connect('http://localhost:3000');
 socket.on('rfid', function(data){
-    setTimeout(function() { window.location = "http://localhost:3000"}, 2000)
-})
+    setTimeout(function() { window.location = "http://localhost:8000"}, 2000)
+});
 var timer_draw = '10';
 var timer_min = 0;
 var timer_sec = 10;
