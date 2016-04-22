@@ -1,8 +1,5 @@
 /*TODO/*
-**Priority***
 * Add more info to results screen
-* Change result bar timeout length for pi
-* mock answer randomization
 */
 
 var socket = io.connect('http://localhost:3000');
@@ -30,38 +27,38 @@ for(var i = 0; i < q_json.length; i++){
 }
 
 var mock_answers = {
-    1: "B",
+    1: "A",
     2: "B",
-    3: "B",
-    4: "B",
+    3: "A
+    4: "A",
     5: "B",
     6: "B",
-    7: "B",
+    7: "A",
     8: "B",
-    9: "B",
+    9: "A",
     10: "B",
     11: "B",
     12: "B",
-    13: "B",
-    14: "B",
+    13: "A",
+    14: "A",
     15: "B",
     16: "B",
-    17: "B",
+    17: "A",
     18: "B",
     19: "B",
-    20: "B",
-    21: "B",
+    20: "A",
+    21: "A",
     22: "B",
     23: "B",
-    24: "B",
+    24: "A",
     25: "B",
     26: "B",
-    27: "B",
-    28: "B",
-    29: "B",
+    27: "A",
+    28: "A",
+    29: "A",
     30: "B",
     31: "B",
-    32: "B"
+    32: "A"
 };
 var percent = 0;
 var results_timer;
@@ -379,7 +376,7 @@ var Transition = function ( state ) {
         else if(this.myState == 7){ //Results Screen
             //draw results screen
             myTimer.hide();
-			if(prog_done == false) results_timer = setInterval(results, 25);
+			if(prog_done == false) results_timer = setInterval(results, 10);
             
         }
 
