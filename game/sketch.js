@@ -29,7 +29,7 @@ for(var i = 0; i < q_json.length; i++){
 var mock_answers = {
     1: "A",
     2: "B",
-    3: "A
+    3: "A",
     4: "A",
     5: "B",
     6: "B",
@@ -265,7 +265,7 @@ var Round1 = function () {
         imageMode(CENTER);
         rectMode(CENTER);
         fill(255);
-        rect(width/2, height-pod_height-200, width*0.75, pod_height+200);
+        rect(width/2, height-pod_height-400, width*0.75, pod_height+600);
         image(podium, width/2, height - (pod_height/2), pod_width, pod_height);
         textSize(32);
         fill(0);
@@ -371,7 +371,7 @@ var Transition = function ( state ) {
             question_text.remove();
             left_choice.remove();
             right_choice.remove();
-            text("Press enter to view your results!", width/2, 300);
+            text("Press a button to view your results!", width/2, 300);
         }
         else if(this.myState == 7){ //Results Screen
             //draw results screen
@@ -544,7 +544,7 @@ function results(){
     rectMode(CENTER);
     fill(255);
     stroke(255);
-    rect(width/2, height-pod_height-200, width*0.75, pod_height+200);
+    rect(width/2, height-pod_height-400, width*0.75, pod_height+600);
     image(podium, width/2, height - (pod_height/2), pod_width, pod_height);
 	percent = ((20 - wrong_count)/20)*100;	
 	console.log(percent);	
