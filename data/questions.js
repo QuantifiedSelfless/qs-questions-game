@@ -323,7 +323,7 @@ var q_json = [
     },
     {
         "question_number":"47",
-        "question_text":"Would you rather have to read every legal agreement you enter or give up all rights to your information?",
+        "question_text":"Are you more okay with throwing away food or technology?",
         "question_left":"Food",
         "question_right":"Technology",
         "image":false   

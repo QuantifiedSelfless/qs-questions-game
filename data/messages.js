@@ -2,4 +2,4 @@ var wrong_messages_round2 = ["DesignCraft would like you to think for a moment a
 
 var wrong_messages_round3 = ["A fine will be billed to your DesignCraft account for that answer.", "I don't think you are who you think you are.", "You do realize identity fraud is a serious crime, right?","Do you think this is funny?", "Oh. I see how it is.", "We will not hesitate to arrest you", "Looks like someone is due for reprogramming.", "This is unacceptable behavior.", "You should know better than this.","You need to take this seriously."];
 
-var results_messages = ["Your fraudulent activity has been reported.", "I don't think you are who you say you are.", "You could use some training, but you know yourself decently!", "Good Work, you really know yourself well."];
+var results_messages = ["Your results indicate you are impersonating someone else. Your fraudulent activity has been reported.", "Your results seem to imply you aren't quite sure of yourself. You should work on that.", "You could use some training, but you know yourself decently!", "Good Work, you really know yourself well."];

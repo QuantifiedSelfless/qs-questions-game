@@ -6,9 +6,9 @@ var socket = io.connect('http://localhost:3000');
 socket.on('rfid', function(data){
     setTimeout(function() { window.location = "http://localhost:8000"}, 2000)
 });
-var timer_draw = '10';
+var timer_draw = '20';
 var timer_min = 0;
-var timer_sec = 10;
+var timer_sec = 20;
 var timer_text;
 var time_start = false;
 var question_count = 0;
@@ -242,6 +242,7 @@ var Round1 = function () {
             });
         }        
 
+		textSize(42);
         text(message, width/2, 300);
         left_choice.class("hide");
         right_choice.class("hide");
@@ -337,7 +338,7 @@ var Transition = function ( state ) {
 
     this.display = function () {
         if (this.myState == 1){ //Round 1
-            timer_sec = 10;
+            timer_sec = 20;
             myR1 = new Round1();
             myR1.start();        
         }
@@ -351,7 +352,7 @@ var Transition = function ( state ) {
             text("When you see \"Ready\" below, press a button to begin round 2!", width/2, 300);   
         }
         else if(this.myState == 3){ //Round 2
-            timer_sec = 10;
+            timer_sec = 20;
             myR2 = new Round1();
             myR2.start();
         }
@@ -363,7 +364,7 @@ var Transition = function ( state ) {
             text("When you're ready, press a button to begin the last round.", width/2, 300);
         }
         else if(this.myState == 5){ //Round 3
-            timer_sec = 5;
+            timer_sec = 10;
             myR3 = new Round1();
             myR3.start();
         }
@@ -390,7 +391,6 @@ var transitionGame = function (state) {
     myTrans.start();
     myTrans.display();
 };
-//TODO: Implement Pi Buttons
 socket.on('button1', function(){
 	if (gameState == 0){
 		transitionGame(1);
@@ -404,7 +404,7 @@ socket.on('button1', function(){
 	}
 	else if (gameState == 3 && myR2.input === true){
 		clearInterval(timerinterval);
-        timer_sec = 10;
+        timer_sec = 20;
 		myR2.leftFire(2);
 	}
 	else if (gameState == 4){
@@ -412,7 +412,7 @@ socket.on('button1', function(){
 	}		
 	else if (gameState == 5 && myR3.input === true){
 		clearInterval(timerinterval);
-        timer_sec = 5;
+        timer_sec = 10;
 		myR3.leftFire(3);
 	}
 	else if (gameState == 6){
@@ -433,7 +433,7 @@ socket.on('button2', function(){
 	}
 	else if (gameState == 3 && myR2.input === true){
 		clearInterval(timerinterval);
-        timer_sec = 10;
+        timer_sec = 20;
 		myR2.rightFire(2);
 	}
 	else if (gameState == 4){
@@ -441,7 +441,7 @@ socket.on('button2', function(){
 	}		
 	else if (gameState == 5 && myR3.input === true){
 		clearInterval(timerinterval);
-        timer_sec = 5;
+        timer_sec = 10;
 		myR3.rightFire(3);
 	}
 	else if (gameState == 6){
@@ -458,7 +458,7 @@ function keyPressed () {
         }
     } else if (gameState == 1) { //Round 1
         clearInterval(timerinterval);
-        timer_sec = 10;
+        timer_sec = 20;
         if (keyCode === LEFT_ARROW && myR1.input === true) {
             myR1.leftFire(1);
         } else if(keyCode === RIGHT_ARROW && myR1.input === true) {
@@ -472,7 +472,7 @@ function keyPressed () {
         
     } else if (gameState == 3) { //Round 2
         clearInterval(timerinterval);
-        timer_sec = 10;
+        timer_sec = 20;
         if (keyCode === LEFT_ARROW && myR2.input === true) {
             myR2.leftFire(2);
         } else if(keyCode === RIGHT_ARROW && myR2.input === true) {
@@ -485,7 +485,7 @@ function keyPressed () {
         }        
     } else if (gameState == 5) {
         clearInterval(timerinterval);
-        timer_sec = 5;
+        timer_sec = 10;
         if (keyCode === LEFT_ARROW && myR3.input === true) {
             myR3.leftFire(3);
         } else if(keyCode === RIGHT_ARROW && myR3.input === true) {
@@ -509,13 +509,13 @@ function update_timer(){
 		if( timer_min == 0 && timer_sec == 0){    
 			// Reset the timer value for the next question, and stop it from counting.
 			if(gameState == 3){
-				timer_sec = 10;
+				timer_sec = 20;
 				myq = parseInt(myR2.question["question_number"]);
 				r = 2;
 				robj = myR2;
 			}
 			else if(gameState == 5){
-				timer_sec = 5;
+				timer_sec = 10;
 				myq = parseInt(myR3.question["question_number"]);
 				r = 3;
 				robj = myR3;
