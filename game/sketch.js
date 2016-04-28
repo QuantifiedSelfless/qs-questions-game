@@ -578,6 +578,6 @@ function results(){
 		else if(percent == 100) var message = results_messages[3];
         strokeWeight(0);
         text(message, width/2, 300);
-		setTimeout(function() { window.location = "http://localhost:8000"}, 5000)
+		setTimeout(function() { window.location = "http://localhost:8000"}, 10000)
     } 
 }
